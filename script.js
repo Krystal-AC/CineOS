@@ -522,11 +522,16 @@ function openWindow(id) {
         win.className = 'window active header-visible';
         win.style.zIndex = ++highestZ;
         
-        let iframeStr = dat.internal ? '<iframe id="frame-' + id + '"></iframe>' : '<iframe id="frame-' + id + '" src="' + dat.path + '"></iframe>';
+        let iframeStr = '<iframe id="frame-' + id + '" referrerpolicy="no-referrer" allow="autoplay; fullscreen; gamepad; microphone; camera"></iframe>';
         
         win.innerHTML = '<div class="win-header" onmousedown="DragSystem.startWinDrag(event, \'' + id + '\')"><div class="win-title">' + dat.title + '</div><div class="win-controls"><div class="win-btn btn-min" onclick="minimizeWindow(\'' + id + '\')"></div><div class="win-btn btn-close" onclick="closeWindow(\'' + id + '\')"></div></div></div><div class="win-body">' + iframeStr + '</div>';
         
         layer.appendChild(win);
+        
+        if(!dat.internal) {
+            let f = document.getElementById('frame-' + id);
+            if(f) setTimeout(function() { f.src = dat.path; }, 0);
+        }
         
         if(dat.internal && id === 'settings') {
             let f = document.getElementById('frame-' + id);
