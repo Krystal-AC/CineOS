@@ -1,54 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Android Emulator</title>
-    <style>
-        html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; }
-        iframe { width: 100%; height: 100%; border: none; }
-        #ntf {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(20,20,20,0.9); color: #fff; padding: 10px 18px;
-            border-radius: 12px; border: 1px solid #333; z-index: 99;
-            display: none; align-items: center; gap: 12px; backdrop-filter: blur(5px);
-        }
-        #ntf b { color: #3498db; }
-        #btn { background: #333; border: none; color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
-        .ld { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; color: #444; background: #000; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Android Emulator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#0a0a0a;overflow:hidden;font-family:system-ui,-apple-system,sans-serif}
+#launcher{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:radial-gradient(ellipse at 60% 40%,rgba(61,220,132,0.18) 0%,transparent 65%),#0a0a0a;z-index:10;transition:opacity 0.4s}
+.icon{width:80px;height:80px;background:linear-gradient(135deg,#3ddc84,#1a9e55);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 8px 32px rgba(61,220,132,0.5)}
+.title{color:#fff;font-size:28px;font-weight:700;letter-spacing:-0.5px}
+.desc{color:rgba(255,255,255,0.45);font-size:14px}
+.btn-wrap{display:flex;gap:12px;margin-top:4px}
+.btn{padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:transform 0.15s}
+.btn-primary{background:linear-gradient(135deg,#3ddc84,#1a9e55);color:#000;box-shadow:0 4px 20px rgba(61,220,132,0.4)}
+.btn-secondary{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.12)}
+.btn:hover{transform:translateY(-2px)}
+.note{color:rgba(255,255,255,0.25);font-size:12px;text-align:center;max-width:300px;line-height:1.6}
+iframe{position:fixed;inset:0;width:100%;height:100%;border:none}
+</style>
 </head>
 <body>
-    <div id="ntf"><span>Active: <b>Server <span id="num"></span></b></span><button id="btn">DISMISS</button></div>
-    <div id="ld">Booting...</div>
-    <iframe id="ifr" allowfullscreen allow="autoplay; fullscreen; gamepad; microphone; camera" referrerpolicy="no-referrer"></iframe>
-    <script>
-        var _s = [
-            atob('Y2luZS1icm93c2VyLTEuYi1jZG4ubmV0'),
-            atob('Y2luZS1icm93c2VyLTIuYi1jZG4ubmV0'),
-            atob('Y2luZS1icm93c2VyLTMuYi1jZG4ubmV0')
-        ];
-        var _u = atob('aHR0cHM6Ly9ub3dnZy5mdW4vYXBwcy91bmN1YmUvNzA3NC9ub3cuaHRtbA==');
-        var ping = function(d) {
-            return fetch('https://' + d, { mode: 'no-cors' }).then(function() { return true; }).catch(function() { return false; });
-        };
-        async function go() {
-            var i = Math.floor(Math.random() * _s.length), s = _s[i];
-            if (!(await ping(s))) {
-                for (var x = 0; x < _s.length; x++) {
-                    if (await ping(_s[x])) { s = _s[x]; i = x; break; }
-                }
-            }
-            var f = document.getElementById('ifr');
-            f.src = 'https://' + s + '/embed.html?url=' + _u;
-            f.style.display = 'block';
-            document.getElementById('ld').style.display = 'none';
-            document.getElementById('num').innerText = i + 1;
-            document.getElementById('ntf').style.display = 'flex';
-            document.getElementById('btn').onclick = function() { document.getElementById('ntf').style.display = 'none'; };
-            setTimeout(function() { document.getElementById('ntf').style.display = 'none'; }, 5000);
-        }
-        go();
-    </script>
+<div id="launcher">
+  <div class="icon">&#9650;</div>
+  <div class="title">Android Emulator</div>
+  <div class="desc">Run Android apps in the browser</div>
+  <div class="btn-wrap">
+    <button class="btn btn-primary" onclick="openTab()">Open Emulator</button>
+    <button class="btn btn-secondary" onclick="tryEmbed()">Try In-Window</button>
+  </div>
+  <p class="note">For best performance and gamepad support, open in a new tab.</p>
+</div>
+<iframe id="ifr" style="display:none" allow="autoplay;fullscreen;gamepad;microphone;camera" referrerpolicy="no-referrer"></iframe>
+<script>
+var _u=atob('aHR0cHM6Ly9ub3dnZy5mdW4vYXBwcy91bmN1YmUvNzA3NC9ub3cuaHRtbA==');
+function openTab(){window.open(_u,'_blank');}
+function tryEmbed(){
+  var f=document.getElementById('ifr');
+  f.style.display='block';
+  document.getElementById('launcher').style.opacity='0';
+  document.getElementById('launcher').style.pointerEvents='none';
+  setTimeout(function(){f.src=_u;},0);
+}
+</script>
 </body>
 </html>

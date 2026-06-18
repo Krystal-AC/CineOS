@@ -1,25 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox</title>
-    <style>
-        html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; }
-        iframe { width: 100%; height: 100%; border: none; }
-        #ld { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; color: #444; background: #000; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roblox</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#0a0a0a;overflow:hidden;font-family:system-ui,-apple-system,sans-serif}
+#launcher{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:radial-gradient(ellipse at 60% 40%,rgba(204,0,0,0.18) 0%,transparent 65%),#0a0a0a;z-index:10;transition:opacity 0.4s}
+.icon{width:80px;height:80px;background:linear-gradient(135deg,#cc0000,#990000);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 8px 32px rgba(204,0,0,0.5)}
+.title{color:#fff;font-size:28px;font-weight:700;letter-spacing:-0.5px}
+.desc{color:rgba(255,255,255,0.45);font-size:14px}
+.btn-wrap{display:flex;gap:12px;margin-top:4px}
+.btn{padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:transform 0.15s}
+.btn-primary{background:linear-gradient(135deg,#cc0000,#990000);color:#fff;box-shadow:0 4px 20px rgba(204,0,0,0.4)}
+.btn-secondary{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.12)}
+.btn:hover{transform:translateY(-2px)}
+.note{color:rgba(255,255,255,0.25);font-size:12px;text-align:center;max-width:300px;line-height:1.6}
+iframe{position:fixed;inset:0;width:100%;height:100%;border:none}
+</style>
 </head>
 <body>
-    <div id="ld">Initialising...</div>
-    <iframe id="ifr" allowfullscreen allow="autoplay; fullscreen; gamepad; microphone; camera" referrerpolicy="no-referrer"></iframe>
-    <script>
-        setTimeout(function() {
-            var f = document.getElementById('ifr');
-            f.src = atob('aHR0cHM6Ly9ub3dnZy5mdW4vYXBwcy9hLzE5OTAwL2IuaHRtbA==');
-            f.style.display = 'block';
-            document.getElementById('ld').style.display = 'none';
-        }, 0);
-    </script>
+<div id="launcher">
+  <div class="icon">&#9632;</div>
+  <div class="title">Roblox</div>
+  <div class="desc">Play Roblox in the browser</div>
+  <div class="btn-wrap">
+    <button class="btn btn-primary" onclick="openTab()">Open Roblox</button>
+    <button class="btn btn-secondary" onclick="tryEmbed()">Try In-Window</button>
+  </div>
+  <p class="note">For the best experience, opening in a new tab is recommended.</p>
+</div>
+<iframe id="ifr" style="display:none" allow="autoplay;fullscreen;gamepad;microphone;camera" referrerpolicy="no-referrer"></iframe>
+<script>
+var _u=atob('aHR0cHM6Ly9ub3dnZy5mdW4vYXBwcy9hLzE5OTAwL2IuaHRtbA==');
+function openTab(){window.open(_u,'_blank');}
+function tryEmbed(){
+  var f=document.getElementById('ifr');
+  f.style.display='block';
+  document.getElementById('launcher').style.opacity='0';
+  document.getElementById('launcher').style.pointerEvents='none';
+  setTimeout(function(){f.src=_u;},0);
+}
+</script>
 </body>
 </html>

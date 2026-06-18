@@ -1,18 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Cini AI</title>
-    <style>
-        html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; }
-        iframe { width: 100%; height: 100%; border: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cini AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#0a0a0a;overflow:hidden;font-family:system-ui,-apple-system,sans-serif}
+#launcher{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:radial-gradient(ellipse at 60% 40%,rgba(16,163,127,0.18) 0%,transparent 65%),#0a0a0a;z-index:10;transition:opacity 0.4s}
+.icon{width:80px;height:80px;background:linear-gradient(135deg,#10a37f,#0a7a5f);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 8px 32px rgba(16,163,127,0.5)}
+.title{color:#fff;font-size:28px;font-weight:700;letter-spacing:-0.5px}
+.desc{color:rgba(255,255,255,0.45);font-size:14px}
+.btn-wrap{display:flex;gap:12px;margin-top:4px}
+.btn{padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:transform 0.15s}
+.btn-primary{background:linear-gradient(135deg,#10a37f,#0a7a5f);color:#fff;box-shadow:0 4px 20px rgba(16,163,127,0.4)}
+.btn-secondary{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.12)}
+.btn:hover{transform:translateY(-2px)}
+.note{color:rgba(255,255,255,0.25);font-size:12px;text-align:center;max-width:300px;line-height:1.6}
+iframe{position:fixed;inset:0;width:100%;height:100%;border:none}
+</style>
 </head>
 <body>
-    <iframe id="ifr" allowfullscreen allow="microphone; camera" referrerpolicy="no-referrer"></iframe>
-    <script>
-        setTimeout(function() {
-            document.getElementById('ifr').src = atob('aHR0cHM6Ly9jaGF0Lm9wZW5haS5jb20=');
-        }, 0);
-    </script>
+<div id="launcher">
+  <div class="icon">&#9733;</div>
+  <div class="title">Cini AI</div>
+  <div class="desc">AI assistant powered by ChatGPT</div>
+  <div class="btn-wrap">
+    <button class="btn btn-primary" onclick="openTab()">Open ChatGPT</button>
+    <button class="btn btn-secondary" onclick="tryEmbed()">Try In-Window</button>
+  </div>
+  <p class="note">OpenAI blocks embedding for security. Opening in a new tab gives full access.</p>
+</div>
+<iframe id="ifr" style="display:none" allow="autoplay;fullscreen;microphone;camera" referrerpolicy="no-referrer"></iframe>
+<script>
+var _u=atob('aHR0cHM6Ly9jaGF0Lm9wZW5haS5jb20=');
+function openTab(){window.open(_u,'_blank');}
+function tryEmbed(){
+  var f=document.getElementById('ifr');
+  f.style.display='block';
+  document.getElementById('launcher').style.opacity='0';
+  document.getElementById('launcher').style.pointerEvents='none';
+  setTimeout(function(){f.src=_u;},0);
+}
+</script>
 </body>
 </html>
