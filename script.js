@@ -505,30 +505,26 @@ function toggleApp(id) {
     }
 }
 
-var _appHtmlCache = {};
-
 function _loadingDoc(title) {
     return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:100%;height:100%;background:#0a0a0a;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif}.ld{display:flex;flex-direction:column;align-items:center;gap:18px}.spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,0.08);border-top-color:rgba(255,255,255,0.7);border-radius:50%;animation:spin 0.7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.lbl{color:rgba(255,255,255,0.4);font-size:13px;letter-spacing:0.08em;text-transform:uppercase}</style></head><body><div class="ld"><div class="spinner"></div><div class="lbl">Loading ' + title + '</div></div></body></html>';
 }
 
 function _loadAppFrame(f, path) {
-    var title = '';
-    for(var k in APPS){ if(APPS[k].path === path){ title = APPS[k].title; break; } }
-    f.srcdoc = _loadingDoc(title);
-    f.removeAttribute('src');
-    if(_appHtmlCache[path]) {
-        f.srcdoc = _appHtmlCache[path];
-        return;
+    var html = (typeof APP_HTML !== 'undefined' && APP_HTML[path]) ? APP_HTML[path] : null;
+    if(html) {
+        f.srcdoc = html;
+    } else {
+        var title = '';
+        for(var k in APPS){ if(APPS[k].path === path){ title = APPS[k].title; break; } }
+        f.srcdoc = _loadingDoc(title);
+        f.removeAttribute('src');
+        fetch(path)
+            .then(function(r){ return r.text(); })
+            .then(function(h){ if(f.isConnected) f.srcdoc = h; })
+            .catch(function(){
+                f.srcdoc = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0}html,body{width:100%;height:100%;background:#0a0a0a;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;color:rgba(255,255,255,0.5);text-align:center;padding:24px}</style></head><body><div><p style="font-size:32px;margin-bottom:12px">&#9888;</p><p style="font-size:14px">App unavailable.</p></div></body></html>';
+            });
     }
-    fetch(path)
-        .then(function(r){ return r.text(); })
-        .then(function(html){
-            _appHtmlCache[path] = html;
-            if(f.isConnected) f.srcdoc = html;
-        })
-        .catch(function(){
-            f.srcdoc = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0}html,body{width:100%;height:100%;background:#0a0a0a;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;color:rgba(255,255,255,0.5);text-align:center;padding:24px}</style></head><body><div><p style="font-size:32px;margin-bottom:12px">&#9888;</p><p style="font-size:14px">Failed to load app.</p></div></body></html>';
-        });
 }
 
 function openWindow(id) {
